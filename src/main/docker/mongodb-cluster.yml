@@ -1,0 +1,16 @@
+version: '2'
+services:
+    ltqvsphere-mongodb:
+        image: mongo:3.6.3
+        ports:
+            - "27017:27017"
+        command: mongos --configdb ltqvsphere-mongodb-config
+    ltqvsphere-mongodb-node:
+        build:
+            context: .
+            dockerfile: mongodb/MongoDB.Dockerfile
+        command: mongod --replSet rs1 --noprealloc --smallfiles
+    ltqvsphere-mongodb-config:
+        image: mongo:3.6.3
+        container_name: ltqvsphere-mongodb-config
+        command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
